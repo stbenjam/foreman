@@ -43,7 +43,8 @@ class SmartProxy < ActiveRecord::Base
       "dns"      => Feature.find_by_name("DNS"),
       "dhcp"     => Feature.find_by_name("DHCP"),
       "puppetca" => Feature.find_by_name("Puppet CA"),
-      "puppet"   => Feature.find_by_name("Puppet")
+      "puppet"   => Feature.find_by_name("Puppet"),
+      "realm"   => Feature.find_by_name("Realm")
     }
   end
 

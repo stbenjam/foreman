@@ -13,6 +13,7 @@ module HostCommon
       belongs_to :ptable
       belongs_to :puppet_proxy,    :class_name => "SmartProxy"
       belongs_to :puppet_ca_proxy, :class_name => "SmartProxy"
+      belongs_to :realm_proxy,     :class_name => "SmartProxy"
       belongs_to :domain
       belongs_to :subnet
 
@@ -52,6 +53,11 @@ module HostCommon
       !!(puppet_ca_proxy and puppet_ca_proxy.url.present?)
     end
 
+    def realm?
+      return false if self.respond_to?(:managed?) and !managed?
+      !!(realm_proxy and realm_proxy.url.present?)
+    end
+
     # no need to store anything in the db if the entry is plain "puppet"
     # If the system is using smart proxies and the user has run the smartproxy:migrate task
     # then the puppetmaster functions handle smart proxy objects
@@ -61,6 +67,10 @@ module HostCommon
 
     def puppet_ca_server
       puppet_ca_proxy.to_s
+    end
+
+    def realm_server
+      realm_proxy.to_s
     end
 
     # If the host/hostgroup has a medium then use the path from there
