@@ -1,3 +1,4 @@
+<% require 'pry' %>
 <div class="tab-pane"  id="compute_resource">
   <%= render 'hosts/compute', :compute_resource => @host.compute_resource if @host.compute_resource_id %>
 </div>
@@ -17,7 +18,8 @@
           <%= render 'common/domain', :item => @host %>
         </span>
         <%= text_f f, :ip, :help_inline => _("IP Address for this host, if DHCP Smart proxy is enabled, this should be auto suggested to you") , :autocomplete => 'off'%>
-         <% if @host.new_record? -%>
+
+         <% if @host.new_record? && SmartProxy.realm_proxies.exists?  -%> 
            <%= checkbox_f f, :realm, :label => _("Register with Kerberos?"), :checked => true, :help_inline => "Enable this host for registration with Kerberos Realm" %>
          <% end -%>
 
