@@ -1,3 +1,5 @@
+require 'pry'
+
 class SmartProxy < ActiveRecord::Base
   include Authorization
   include Taxonomix
@@ -13,6 +15,7 @@ class SmartProxy < ActiveRecord::Base
   has_many :hostgroups, :foreign_key => "puppet_proxy_id"
   has_many :puppet_ca_hosts, :class_name => "Host::Managed", :foreign_key => "puppet_ca_proxy_id"
   has_many :puppet_ca_hostgroups, :class_name => "Hostgroup", :foreign_key => "puppet_ca_proxy_id"
+  has_many :realm_hosts, :class_name => "Host::Managed", :foreign_key => "realm_proxy_id"
   URL_HOSTNAME_MATCH = %r{^(?:http|https):\/\/([^:\/]+)}
   validates_uniqueness_of :name
   validates_presence_of :name, :url
@@ -44,7 +47,7 @@ class SmartProxy < ActiveRecord::Base
       "dhcp"     => Feature.find_by_name("DHCP"),
       "puppetca" => Feature.find_by_name("Puppet CA"),
       "puppet"   => Feature.find_by_name("Puppet"),
-      "realm"   => Feature.find_by_name("Realm")
+      "realm"    => Feature.find_by_name("Realm")
     }
   end
 
@@ -71,6 +74,7 @@ class SmartProxy < ActiveRecord::Base
     ids << hosts.joins(:domain).pluck('DISTINCT domains.dns_id')
     ids << hosts.pluck('DISTINCT puppet_proxy_id')
     ids << hosts.pluck('DISTINCT puppet_ca_proxy_id')
+    ids << hosts.pluck('DISTINCT realm_proxy_id')
     ids << hosts.joins(:hostgroup).pluck('DISTINCT hostgroups.puppet_proxy_id')
     ids << hosts.joins(:hostgroup).pluck('DISTINCT hostgroups.puppet_ca_proxy_id')
     # returned both 7, "7". need to convert to integer or there are duplicates
