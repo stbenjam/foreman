@@ -20,7 +20,7 @@
         <%= text_f f, :ip, :help_inline => _("IP Address for this host, if DHCP Smart proxy is enabled, this should be auto suggested to you") , :autocomplete => 'off'%>
 
          <% if @host.new_record? && SmartProxy.realm_proxies.exists?  -%> 
-           <%= checkbox_f f, :realm, :label => _("Register with Kerberos?"), :checked => true, :help_inline => "Enable this host for registration with Kerberos Realm" %>
+           <%= checkbox_f f, :realm_member, :label => _("Register with Kerberos?"), :checked => true, :help_inline => "Enable this host for registration with Kerberos Realm" %>
          <% end -%>
 
         <%= f.fields_for :interfaces do |interfaces| %>

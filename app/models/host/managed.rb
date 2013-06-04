@@ -170,6 +170,7 @@ class Host::Managed < Host::Base
     include Orchestration::TFTP
     include Orchestration::Puppetca
     include Orchestration::SSHProvision
+    include Orchestration::Realm
     include HostTemplateHelpers
 
     validates_uniqueness_of  :ip, :if => Proc.new {|host| host.require_ip_validation?}
@@ -698,6 +699,9 @@ class Host::Managed < Host::Base
     [puppet_proxy_id, puppet_ca_proxy_id, hostgroup.try(:puppet_proxy_id), hostgroup.try(:puppet_ca_proxy_id)].compact.each do |p|
       ids << p
     end
+
+    ids << s.realm_proxy_id
+
     ids.uniq.compact
   end
 
