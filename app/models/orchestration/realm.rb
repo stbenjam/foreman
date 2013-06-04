@@ -3,22 +3,23 @@ module Orchestration::Realm
     base.send :include, InstanceMethods
     base.class_eval do
       attr_reader :realm
-      after_validation :initialize_realm, :queue_realm
-      before_destroy :initialize_realm, :queue_realm_destroy unless Rails.env == "test"
+      after_validation :queue_realm
+      before_destroy :queue_realm_destroy unless Rails.env == "test"
     end
   end
 
   module InstanceMethods
 
     protected
-    def initialize_realm
-      return unless realm?
-      return unless Setting[:manage_realm]
-      @realm = ProxyAPI::Realm.new :url => realm_proxy.url
-      true
-    rescue => e
-      failure _("Failed to initialize the Realm proxy: %s") % e
-    end
+#    def initialize_realm
+#      logger.debug "Initializing Realm"
+#      return unless realm?
+#      return unless Setting[:manage_realm]
+#      @realm = ProxyAPI::Realm.new :url => realm_proxy.url
+#      true
+#    rescue => e
+#      failure _("Failed to initialize the Realm proxy: %s") % e
+#    end
 
     # Removes the host's registration from the Kerberos server
     def delRegistration
@@ -55,6 +56,7 @@ module Orchestration::Realm
     private
 
     def queue_realm
+      logger.debug "Queueing Realm"
       return unless realm? and errors.empty?
       return unless Setting[:manage_realm]
       new_record? ? queue_realm_create : queue_realm_update
