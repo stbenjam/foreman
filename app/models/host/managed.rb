@@ -1,3 +1,5 @@
+require 'pry-remote'
+
 class Host::Managed < Host::Base
   include Authorization
   include ReportCommon
@@ -696,11 +698,9 @@ class Host::Managed < Host::Base
       ids << d.dns_id
     end
 
-    [puppet_proxy_id, puppet_ca_proxy_id, hostgroup.try(:puppet_proxy_id), hostgroup.try(:puppet_ca_proxy_id)].compact.each do |p|
+    [ realm_proxy_id, puppet_proxy_id, puppet_ca_proxy_id, hostgroup.try(:puppet_proxy_id), hostgroup.try(:puppet_ca_proxy_id)].compact.each do |p|
       ids << p
     end
-
-    ids << s.realm_proxy_id
 
     ids.uniq.compact
   end
