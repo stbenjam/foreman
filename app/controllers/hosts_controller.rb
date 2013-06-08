@@ -571,4 +571,10 @@ class HostsController < ApplicationController
     @host.overwrite = "true" if @host.errors.any? and @host.errors.are_all_conflicts?
   end
 
+  # For Realm #1809
+  def mk_otp
+    self.realm_otp = (0...8).map{(65+rand(26)).chr}.join
+  end
+
+
 end

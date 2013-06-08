@@ -21,6 +21,7 @@
 
          <% if @host.new_record? && SmartProxy.realm_proxies.exists?  -%> 
            <%= checkbox_f f, :realm_member, :label => _("Register with Kerberos?"), :checked => true, :help_inline => "Enable this host for registration with Kerberos Realm" %>
+           <%= text_f f, :value => "#{mk_otp}", :realm_otp, :label => _("OTP"), :help_inline => "OneTime Pssword for Realm Registration" %>
          <% end -%>
 
         <%= f.fields_for :interfaces do |interfaces| %>
