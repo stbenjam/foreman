@@ -64,4 +64,44 @@ namespace :hosts do
     printhosts(offline, "offline hosts")
     printhosts(pingable, "online hosts which are not running puppet")
   end
+
+    desc "Clone a machine.  See source for instructions"
+  # Clone a to b and get an IP from Foreman proxy
+  #sudo -u foreman RAILS_ENV=production rake hosts:clone HOSTA=a.example.net HOSTB=b.example.net MAC=08002732E78F
+  # CLone a to b, specifying an IP
+  #sudo -u foreman RAILS_ENV=production rake hosts:clone HOSTA=a.example.net HOSTB=b.example.net MAC=08002732E78F IP=192.168.8.55
+  task :clone => :environment do
+    a = ENV['HOSTA']
+    b = ENV['HOSTB']
+    mac = ENV['MAC']
+    ip = ENV['IP'] || nil
+    # find host a . . .
+    host_a = Host.find_by_name(a)
+    if host_a.nil?
+      puts "Error cloning #{ENV['HOSTA']}: Can't find #{a}"
+      exit 1
+    end
+    # Clone a to b . . .
+    begin
+      host_b = host_a.clone
+      host_b['name'] = b
+      host_b['mac'] = mac
+      # Give host b an IP address (either from CLI or looked up)
+      unless host_b['ip'] = ip
+        s = Subnet.find_by_id(host_b[:subnet_id])
+        host_b['ip'] = s.unused_ip
+      end
+      #puts host_a.to_yaml
+      #puts host_b.to_yaml
+      # Save the new host and set it as "buildable"
+      host_b.save
+      host_b.setBuild
+    rescue => e
+      puts "Error cloning #{a}: #{e.message}"
+      exit 1
+    else
+      puts "#{b} created with IP #{host_b['ip']}"
+    end
+  end
+
 end
