@@ -21,7 +21,8 @@ class ConfigTemplate < ActiveRecord::Base
   accepts_nested_attributes_for :template_combinations, :allow_destroy => true, :reject_if => lambda {|tc| tc[:environment_id].blank? and tc[:hostgroup_id].blank? }
   has_and_belongs_to_many :operatingsystems
   has_many :os_default_templates
-  before_save :check_for_snippet_assoications, :remove_trailing_chars
+  before_save :check_for_snippet_assoications, :remove_trailing_chars, :load_attrs
+  serialize :attrs, Hash
   # with proc support, default_scope can no longer be chained
   # include all default scoping here
   default_scope lambda {
@@ -169,6 +170,13 @@ class ConfigTemplate < ActiveRecord::Base
     unless actual_changes.delete_if { |k, v| allowed_changes.include? k }.empty?
       errors.add(:base, _("This template is locked. Please clone it to a new template to customize."))
     end
+  end
+
+  def load_attrs
+    attrs = template.match(/\A<%#(.*?)%>/m)
+    self.attrs = attrs.nil? ? nil : YAML.load(attrs[1])
+  rescue SyntaxError
+    nil
   end
 
   # check if our template is a snippet, and remove its associations just in case they were selected.
