@@ -121,6 +121,38 @@ class ConfigTemplateTest < ActiveSupport::TestCase
     assert_valid tmplt
   end
 
+
+  describe "Operating system associations" do
+    setup do
+      @os = FactoryGirl.create(:operatingsystem)
+      @tk = FactoryGirl.create(:template_kind)
+      @template_content = "<%#\nkind: provision\nname: Kickstart default\noses:- RedHat\n- Ubuntu 14.04\n- #{@os.name} #{@os.major}\n%>"
+    end
+
+    it "should set an os_hash on save" do
+      @template = FactoryGirl.create(:config_template, :template_kind => @tk, :template => @template_content)
+      assert_equal @template.os_hash["RedHat"], {}
+      assert_equal @template.os_hash["Ubuntu"], {"14" => ["04"]}
+      assert_equal @template.os_hash[@os.name], {@os.major => []}
+    end
+
+    it "should detect supported opearing systems" do
+      refute @template.supports? "Windows", nil, nil
+      refute @template.supportS? "Ubuntu", "14", "09"
+      assert @template.supports? "RedHat", "9", "1"
+      assert @template.supports? "Ubuntu", "14", "04"
+      assert @template.supports? "CentOS", "4", nil
+      assert @template.supports? @os.name, @os.major, nil
+      assert @template.supports? @os.name, @os.major, "36"
+    end
+
+
+    it "should associate with an OS on creation" do
+      @template = FactoryGirl.create(:config_template, :template_kind => @tk, :template => @template_content)
+      assert @template.operatingsystems.include? @os
+    end
+  end
+
   describe "Association cascading" do
     setup do
       @os1 = FactoryGirl.create(:operatingsystem)

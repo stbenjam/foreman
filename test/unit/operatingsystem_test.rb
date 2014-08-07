@@ -133,6 +133,13 @@ class OperatingsystemTest < ActiveSupport::TestCase
     assert_equal 1, medium.operatingsystem_names.count
     assert_equal ["centos 5.3"], medium.operatingsystem_names
   end
+      
+  test "should automatically associate with templates" do
+    content = "<%#\nkind: provision\nname: Kickstart default\noses:- CentOS 17\n%>"
+    template = FactoryGirl.create(:config_template, :template_kind => FactoryGirl.create(:template_kind), :template => content)
+    os = FactoryGirl.create(:operatingsystem, :name => 'CentOS', :major => '17')
+    assert os.config_templates.include? template
+  end
 
   describe "families" do
     let(:os) { Operatingsystem.new :name => "dummy", :major => 7 }
@@ -180,6 +187,7 @@ class OperatingsystemTest < ActiveSupport::TestCase
       assert_equal ["AIX", "Altlinux", "Archlinux", "Debian", "Freebsd", "Gentoo", "Junos", "Redhat", "Solaris", "Suse", "Windows"], families.map(&:value).sort
     end
   end
+
 
   describe "descriptions" do
     test "Redhat LSB description should be correctly shortened" do
