@@ -30,6 +30,12 @@ module Orchestration::Realm
     logger.info "#{options[:update] ? 'Update' : 'Add'} realm entry for #{options[:rebuild] ? 'reprovisioned' : 'new'} host #{name}"
     options[:hostname]  = name
     options[:userclass] = hostgroup.title unless hostgroup.nil?
+
+    [:domain, :environment, :organization, :location, :architecture, :operatingsystem, :owner].each do |attribute|
+      value = self.send(attribute)
+      options[attribute] = value.to_s if value
+    end
+
     result = @realm_api.create options
     raise ::Foreman::Exception.new(N_('Realm proxy did not return a one-time password')) unless options[:update] || result.has_key?("randompassword")
     self.otp = result["randompassword"]
