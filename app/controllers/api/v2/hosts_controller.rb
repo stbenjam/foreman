@@ -68,6 +68,9 @@ module Api
           param :comment, String, :desc => N_("Additional information about this host")
           param :capabilities, String
           param :compute_profile_id, :number
+          Host::Managed.extended_attributes.each do |attribute|
+            param attribute[:name], attribute[:type], attribute[:options]
+          end
           param :compute_attributes, Hash do
           end
         end

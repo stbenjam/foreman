@@ -11,6 +11,8 @@ attributes :ip, :environment_id, :environment_name, :last_report, :mac, :realm_i
            :puppet_proxy_id, :certname, :image_id, :image_name, :created_at, :updated_at,
            :last_compile, :last_freshcheck, :serial, :source_file_id, :puppet_status
 
+attributes *Host.extended_rabl_attributes
+
 if SETTINGS[:organizations_enabled]
   attributes :organization_id, :organization_name
 end

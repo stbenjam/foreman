@@ -1,5 +1,6 @@
 class Host::Managed < Host::Base
   include ReportCommon
+  include ApiExtensions
   include Hostext::Search
   PROVISION_METHODS = %w[build image]
 

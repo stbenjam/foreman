@@ -3,6 +3,7 @@ class Hostgroup < ActiveRecord::Base
   extend FriendlyId
   friendly_id :title
   include Taxonomix
+  include ApiExtensions
   include HostCommon
   include NestedAncestryCommon
   include ScopedSearchExtensions

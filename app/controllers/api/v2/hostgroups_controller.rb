@@ -40,6 +40,9 @@ module Api
           param :domain_id, :number
           param :realm_id, :number
           param :puppet_proxy_id, :number
+          Hostgroup.extended_attributes.each do |attribute|
+            param attribute[:name], attribute[:type], attribute[:options]
+          end
           param_group :taxonomies, ::Api::V2::BaseController
         end
       end
@@ -93,7 +96,6 @@ module Api
       def allowed_nested_id
         %w(puppetclass_id location_id organization_id)
       end
-
     end
   end
 end
