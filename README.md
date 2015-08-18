@@ -1,8 +1,8 @@
 ![Foreman](https://raw.githubusercontent.com/theforeman/foreman-graphics/master/logo/foreman_medium.png)
 
 [![Build Status](http://ci.theforeman.org/buildStatus/icon?job=test_develop)](http://ci.theforeman.org/job/test_develop/)
-[![Code Climate](https://codeclimate.com/github/theforeman/foreman/badges/gpa.svg)](https://codeclimate.com/github/theforeman/foreman)
 [![Issue Stats](http://issuestats.com/github/theforeman/foreman/badge/pr)](http://issuestats.com/github/theforeman/foreman)
+[![Code Climate](https://codeclimate.com/github/theforeman/foreman/badges/gpa.svg)](https://codeclimate.com/github/theforeman/foreman)
 [![Support IRC channel](https://kiwiirc.com/buttons/irc.freenode.net/theforeman.png)](https://kiwiirc.com/client/irc.freenode.net/?#theforeman)
 
 [Foreman](http://theforeman.org) is a free open source project that gives you the power to easily **automate repetitive tasks**, quickly **deploy applications**, and proactively **manage your servers lifecyle**, on-premises or in the cloud.
