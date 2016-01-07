@@ -1,7 +1,10 @@
 require 'test_helper'
 
 class ApplicationMailerTest < ActiveSupport::TestCase
-  setup { ActionMailer::Base.deliveries = [] }
+  setup do
+    ActionMailer::Base.deliveries = []
+    Setting[:delivery_method] = :test
+  end
 
   class TestMailer < ::ApplicationMailer
     def test
@@ -47,5 +50,11 @@ class ApplicationMailerTest < ActiveSupport::TestCase
     new_from = 'foreman@widgets.example.com'
     Setting[:email_reply_address] = new_from
     assert_equal mail.from.first, new_from
+  end
+
+  test 'use setting configuration instead of email.yaml' do
+    Setting[:email_yaml] = false
+    Setting[:smtp_port] = 25
+    assert_equal mail.delivery_method.settings[:port], 25
   end
 end

@@ -291,3 +291,19 @@ attributes60:
   category: Setting::General
   default: 30
   description: 'Max days for Trends graphs'
+attributes61:
+  name: smtp_port
+  category: Setting::Email
+  default: 587
+  description: "SMTP server's port"
+attributes62:
+  name: delivery_method
+  category: Setting::Email
+  default: "test"
+  description: "Delivery Method"
+attributes63:
+  name: email_yaml
+  category: Setting::Email
+  default: "false"
+  description: 'Keeps email.yaml configuration'
+
