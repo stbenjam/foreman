@@ -13,6 +13,9 @@ class AuditMailerTest <ActionMailer::TestCase
     @options = {}
     @options[:env] = @env
     @options[:user] = users(:admin).id
+
+    Setting::Email.load_defaults
+    Setting[:delivery_method] = :test
   end
 
   test 'Audit mail subject should be Audit summary' do

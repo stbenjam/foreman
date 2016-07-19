@@ -3,6 +3,7 @@ require 'test_helper'
 class ApplicationMailerTest < ActiveSupport::TestCase
   setup do
     ActionMailer::Base.deliveries = []
+    Setting::Email.load_defaults
     Setting[:delivery_method] = :test
   end
 
@@ -52,9 +53,11 @@ class ApplicationMailerTest < ActiveSupport::TestCase
     assert_equal mail.from.first, new_from
   end
 
-  test 'use setting configuration instead of email.yaml' do
-    Setting[:email_yaml] = false
-    Setting[:smtp_port] = 25
-    assert_equal mail.delivery_method.settings[:port], 25
+  test 'email settings are configured dynamically' do
+    Setting[:delivery_method] = 'smtp'
+    Setting[:smtp_address] = 'smtp.example.com'
+    mail_obj = TestMailer.test
+    assert_instance_of Mail::SMTP, mail_obj.delivery_method
+    assert_equal mail_obj.delivery_method.settings[:address], 'smtp.example.com'
   end
 end

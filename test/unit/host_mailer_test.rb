@@ -22,6 +22,8 @@ class HostMailerTest < ActionMailer::TestCase
 
     @env.reload
 
+    Setting::Email.load_defaults
+    Setting[:delivery_method] = :test
     ActionMailer::Base.deliveries = []
   end
 
