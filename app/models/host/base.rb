@@ -36,6 +36,7 @@ module Host
     validate :host_has_required_interfaces
     validate :uniq_interfaces_identifiers
     validate :build_managed_only
+    validate :taxonomic_assocations
 
     include PxeLoaderSuggestion
 
@@ -380,6 +381,15 @@ module Host
     def tax_organization
       return nil unless organization_id
       @tax_organization ||= TaxHost.new(organization, self)
+    end
+
+    def taxonomic_assocations
+      if missing_ids.any?
+        missing_ids.each do |missing|
+          kind = Taxonomy.find(missing[:taxonomy_id])&.type
+          errors.add :base, _("Host %{assocation} is not part of %{kind}") % {assocation: missing[:taxable_type], kind: kind || _('organization or location.')}
+        end
+      end
     end
 
     def build_required_interfaces(attrs = {})

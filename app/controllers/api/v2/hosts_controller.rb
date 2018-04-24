@@ -104,6 +104,7 @@ module Api
           param :enabled, :bool, :desc => N_("Include this host within Foreman reporting")
           param :provision_method, Host::Managed.provision_methods.keys, :desc => N_("The method used to provision the host.")
           param :managed, :bool, :desc => N_("True/False flag whether a host is managed or unmanaged. Note: this value also determines whether several parameters are required or not")
+          param :fix_mismatches, :bool, :desc => N_('True/False flag whether a host\'s assocations should be automatically added to an organization or location')
           param :progress_report_id, String, :desc => N_("UUID to track orchestration tasks status, GET /api/orchestration/:UUID/tasks")
           param :comment, String, :desc => N_("Additional information about this host")
           param :capabilities, String
@@ -139,6 +140,8 @@ module Api
         end
         apply_compute_profile(@host)
         @host.suggest_default_pxe_loader if params[:host] && params[:host][:pxe_loader].nil?
+
+        @host.import_missing_ids if params[:host][:fix_mismatches]
 
         forward_request_url
         process_response @host.save

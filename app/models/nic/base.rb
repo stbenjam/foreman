@@ -116,7 +116,7 @@ module Nic
     end
 
     def shortname
-      domain.nil? ? name : name.to_s.chomp("." + domain.name)
+      domain_id.nil? ? name : name.to_s.chomp("." + Domain.unscoped.find(domain_id).name)
     end
 
     def validated?

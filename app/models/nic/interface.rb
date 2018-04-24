@@ -124,10 +124,10 @@ module Nic
       return if name.empty?
       if domain_id.nil? && name.include?('.') && changed_attributes['domain_id'].blank?
         # try to assign the domain automatically based on our existing domains from the host FQDN
-        self.domain = Domain.find_by(:name => name.partition('.')[2])
+        self.domain = Domain.unscoped.find_by(:name => name.partition('.')[2])
       elsif persisted? && changed_attributes['domain_id'].present?
         # if we've just updated the domain name, strip off the old one
-        old_domain = Domain.find(changed_attributes["domain_id"])
+        old_domain = Domain.unscoped.find(changed_attributes["domain_id"])
         # Remove the old domain, until fqdn will be set as the full name
         self.name = self.name.chomp('.' + old_domain.to_s)
       end
